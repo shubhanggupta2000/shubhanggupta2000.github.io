@@ -3,20 +3,37 @@ import { ThemeProvider } from "styled-components";
 import { lightTheme } from "./components/Themes";
 import { AnimatePresence } from "framer-motion";
 import GlobalStyle from "./globalStyles";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import Loading from "./subComponents/Loading";
 import BlogPost from "./components/BlogPost";
 import PageTransition from "./subComponents/pageTransition";
 
-// Components (using lazy loading)
-const Main = lazy(() => import("./components/Main"));
-const AboutPage = lazy(() => import("./components/AboutPage"));
-const ContactPage = lazy(() => import("./components/ContactPage"));
-const BlogPage = lazy(() => import("./components/BlogPage"));
-const WorkPage = lazy(() => import("./components/WorkPage"));
-const MySkillsPage = lazy(() => import("./components/MySkillsPage"));
+const pageImports = {
+  main: () => import("./components/Main"),
+  about: () => import("./components/AboutPage"),
+  contact: () => import("./components/ContactPage"),
+  blog: () => import("./components/BlogPage"),
+  work: () => import("./components/WorkPage"),
+  skills: () => import("./components/MySkillsPage"),
+};
+
+const Main = lazy(pageImports.main);
+const AboutPage = lazy(pageImports.about);
+const ContactPage = lazy(pageImports.contact);
+const BlogPage = lazy(pageImports.blog);
+const WorkPage = lazy(pageImports.work);
+const MySkillsPage = lazy(pageImports.skills);
 
 function App() {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      Object.values(pageImports).forEach((load) => {
+        load().catch(() => {});
+      });
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <ThemeProvider theme={lightTheme}>
       <GlobalStyle />
