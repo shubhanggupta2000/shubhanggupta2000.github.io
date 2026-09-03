@@ -90,8 +90,8 @@ const WorkPage = () => {
 
         <Suspense fallback={<Loading />}>
           <motion.div variants={container} initial="hidden" animate="show">
-            {Work.map((d) => (
-              <Card key={d.index} data={d} />
+            {Work.map((d, index) => (
+              <Card key={index} data={d} index={index} />
             ))}
           </motion.div>
         </Suspense>
