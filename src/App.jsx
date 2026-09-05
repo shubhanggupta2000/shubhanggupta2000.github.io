@@ -110,7 +110,8 @@ function App() {
   return (
     <ThemeProvider theme={lightTheme}>
       <GlobalStyle />
-      <Router basename="/portfolio">
+
+      <Router basename={import.meta.env.BASE_URL}>
         <Suspense fallback={<Loading />}>
           <AnimatedRoutes />
         </Suspense>
